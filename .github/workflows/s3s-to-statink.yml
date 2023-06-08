@@ -42,9 +42,14 @@ jobs:
 
 
 
-
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Update File
+        run: |
+          echo %date% %time% > log.txt
+        
       - name: Commit and Push # 実行結果をプッシュしてレポジトリに反映
-        working-directory: s3s-to-statink
         run: |
           git config --global user.email "kkchn0am@gmail.com"
           git config --global user.name "kkchn0am"
