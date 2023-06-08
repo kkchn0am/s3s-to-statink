@@ -17,43 +17,48 @@ jobs:
       F_GEN: ${{ secrets.F_GEN }}
 
     name: Splatoon3 Battlelog Uploader
-    permissions: 
+
+    permissions:  # ログファイル修正のため権限を設定
         contents: write
+
     steps:
-      - name: Set up Python 3.11
+      - name: Set up Python 3.11 # Pythonのセットアップ
         uses: actions/setup-python@v4
         with:
           python-version: 3.11
 
-      - name: Checkout frozenpandaman/s3s
+      - name: Checkout frozenpandaman/s3s # s3sをチェックアウト
         uses: actions/checkout@v3
         with:
           repository: 'frozenpandaman/s3s'
           path: s3s
 
-      - name: Generate config.txt
+      - name: Generate config.txt # config.txtの作成
         working-directory: s3s
         run: |
           echo '{"api_key": "${{ env.API_KEY }}", "acc_loc": "${{ env.ACC_LOC }}", "gtoken": "${{ env.GTOKEN }}", "bullettoken": "${{ env.BULLETTOKEN }}", "session_token": "${{ env.SESSION_TOKEN }}", "f_gen": "${{ env.F_GEN }}" }' > config.txt
           cat config.txt
-      - name: Install s3s requirements
+
+      - name: Install s3s requirements # s3sのパッケージリストを取得
         working-directory: s3s
         run: |
           pip install -r requirements.txt
 
+      - name: Run s3s # s3sの実行
+        working-directory: s3s
+        run: |
+          python3 s3s.py -r
 
-
-
-      - name: Checkout
+      - name: Checkout # リポジトリからチェックアウト
         uses: actions/checkout@v3
-        
-      - name: Update File
+
+      - name: Update LogFile # ログファイルに日付時刻を出力
         env:
           TZ: 'Asia/Tokyo'
         run: |
           echo $(date +'%Y-%m-%d %H:%M:%S') > log.txt
-        
-      - name: Commit and Push # 実行結果をプッシュしてレポジトリに反映
+
+      - name: Commit and Push # ログファイルをプッシュしてリポジトリに反映
         run: |
           git config --global user.email "kkchn0am@gmail.com"
           git config --global user.name "kkchn0am"
