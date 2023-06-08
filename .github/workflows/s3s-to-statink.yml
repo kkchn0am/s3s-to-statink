@@ -46,6 +46,8 @@ jobs:
       - name: Commit and Push # 実行結果をプッシュしてレポジトリに反映
         working-directory: s3s
         run: |
+          git config --global user.email "kkchn0am@gmail.com"
+          git config --global user.name "kkchn0am"
           git add .
           git commit -m "Update product information"
           git config pull.rebase false
