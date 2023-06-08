@@ -40,7 +40,6 @@ jobs:
           pip install -r requirements.txt
 
       - name: Commit and Push # 実行結果をプッシュしてレポジトリに反映
-        working-directory: s3s-to-statink
         run: |
           git config --global user.email "kkchn0am@gmail.com"
           git config --global user.name "kkchn0am"
