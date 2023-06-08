@@ -37,7 +37,11 @@ jobs:
       - name: Install s3s requirements
         working-directory: s3s
         run: |
-          pip install -r requirements.
+          pip install -r requirements.txt
+
+
+
+
 
       - name: Commit and Push # 実行結果をプッシュしてレポジトリに反映
         working-directory: s3s
