@@ -38,10 +38,10 @@ jobs:
         working-directory: s3s
         run: |
           pip install -r requirements.txt
-     - name: Run s3s
-       working-directory: s3s
-       run: |
-         python3 s3s.py -r
+      - name: Run s3s
+        working-directory: s3s
+        run: |
+          python3 s3s.py -r
 
       - name: Commit and Push # 実行結果をプッシュしてレポジトリに反映
         working-directory: s3s
