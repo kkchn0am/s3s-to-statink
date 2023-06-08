@@ -38,7 +38,7 @@ jobs:
         working-directory: s3s
         run: |
           pip install -r requirements.
-         
+
       - name: Commit and Push # 実行結果をプッシュしてレポジトリに反映
         working-directory: s3s
         run: |
