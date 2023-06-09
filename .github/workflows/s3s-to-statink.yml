@@ -60,7 +60,7 @@ jobs:
 
       - name: Commit and Push # ログファイルをプッシュしてリポジトリに反映
         run: |
-          git config --global user.email "kkchn0am@gmail.com"
+          git config --global user.email "ruzoho606@sofia.re"
           git config --global user.name "kkchn0am"
           git add .
           git commit -m "Update product information"
