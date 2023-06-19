@@ -52,7 +52,7 @@ jobs:
       - name: Run ls # 
         run: |
           pwd
-          ls s3s/exports
+          ls s3s/exports/coop_results
 
 #      - name: Checkout # リポジトリからチェックアウト
 #        uses: actions/checkout@v3
