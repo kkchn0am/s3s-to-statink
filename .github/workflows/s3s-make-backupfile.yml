@@ -16,7 +16,7 @@ jobs:
       SESSION_TOKEN: ${{ secrets.SESSION_TOKEN }}
       F_GEN: ${{ secrets.F_GEN }}
 
-    name: Splatoon3 Battlelog Uploader
+    name: Splatoon3 Splatnet3 Backup
 
     permissions:  # ログファイル修正のため権限を設定
         contents: write
@@ -52,7 +52,7 @@ jobs:
       - name: Run ls # 
         run: |
           pwd
-          ls
+          ls s3s/export/coop_results
 
 #      - name: Checkout # リポジトリからチェックアウト
 #        uses: actions/checkout@v3
