@@ -1,0 +1,74 @@
+name: Splatoon3 Splatnet3 Backup
+
+on:
+  schedule:
+    - cron: '0 0-23/2 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      API_KEY: ${{ secrets.API_KEY }}
+      ACC_LOC: ${{ secrets.ACC_LOC }}
+      GTOKEN: ${{ secrets.GTOKEN }}
+      BULLETTOKEN: ${{ secrets.BULLETTOKEN }}
+      SESSION_TOKEN: ${{ secrets.SESSION_TOKEN }}
+      F_GEN: ${{ secrets.F_GEN }}
+
+    name: Splatoon3 Battlelog Uploader
+
+    permissions:  # ログファイル修正のため権限を設定
+        contents: write
+
+    steps:
+      - name: Set up Python 3.11 # Pythonのセットアップ
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Checkout frozenpandaman/s3s # s3sをチェックアウト
+        uses: actions/checkout@v3
+        with:
+          repository: 'frozenpandaman/s3s'
+          path: s3s
+
+      - name: Generate config.txt # config.txtの作成
+        working-directory: s3s
+        run: |
+          echo '{"api_key": "${{ env.API_KEY }}", "acc_loc": "${{ env.ACC_LOC }}", "gtoken": "${{ env.GTOKEN }}", "bullettoken": "${{ env.BULLETTOKEN }}", "session_token": "${{ env.SESSION_TOKEN }}", "f_gen": "${{ env.F_GEN }}" }' > config.txt
+          cat config.txt
+
+      - name: Install s3s requirements # s3sのパッケージリストを取得
+        working-directory: s3s
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run s3s # s3sの実行
+        working-directory: s3s
+        run: |
+          python3 s3s.py -o
+
+      - name: Run ls # 
+        run: |
+          pwd
+          ls
+
+#      - name: Checkout # リポジトリからチェックアウト
+#        uses: actions/checkout@v3
+
+#      - name: Update LogFile # ログファイルに日付時刻を出力
+#        env:
+#          TZ: 'Asia/Tokyo'
+#        run: |
+#          echo $(date +'%Y-%m-%d %H:%M:%S') > log.txt
+
+#      - name: Commit and Push # ログファイルをプッシュしてリポジトリに反映
+#        run: |
+#          git config --global user.email "ruzoho606@sofia.re"
+#          git config --global user.name "kkchn0am"
+#          git add .
+#          git commit -m "Update product information"
+#          git config pull.rebase false
+#          git pull
+#          git push origin main
