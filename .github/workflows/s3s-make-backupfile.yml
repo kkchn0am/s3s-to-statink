@@ -44,22 +44,11 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Run s3s # s3sの実行
-        working-directory: s3s
-        run: |
-          python3 s3s.py -o
+      #- name: Run s3s # s3sの実行
+      #  working-directory: s3s
+      #  run: |
+      #    python3 s3s.py -o
 
-      - name: Run ls # 
-        run: |
-          pwd
-          ls s3s/exports/coop_results
-
-      - name: Dropbox Uploader
-        uses: whalemare/action-dropbox@v1.0.0
-        with: 
-          accessToken: ${{ secrets.DROPBOX_TOKEN }}
-          file: "s3s/exports/coop_results/*"
-          destination: 'upload'
 
       # 成果物アップロード
       #- name: artifact upload
@@ -70,15 +59,14 @@ jobs:
       #    # 保存するファイル
       #    path: s3s/exports/coop_results
       
+      - name: Checkout # リポジトリからチェックアウト
+        uses: actions/checkout@v3
 
-#      - name: Checkout # リポジトリからチェックアウト
-#        uses: actions/checkout@v3
-
-#      - name: Update LogFile # ログファイルに日付時刻を出力
-#        env:
-#          TZ: 'Asia/Tokyo'
-#        run: |
-#          echo $(date +'%Y-%m-%d %H:%M:%S') > log.txt
+      - name: Update LogFile # ログファイルに日付時刻を出力
+        env:
+          TZ: 'Asia/Tokyo'
+        run: |
+          echo $(date +'%Y-%m-%d %H:%M:%S') > /log.txt
 
 #      - name: Commit and Push # ログファイルをプッシュしてリポジトリに反映
 #        run: |
@@ -89,3 +77,16 @@ jobs:
 #          git config pull.rebase false
 #          git pull
 #          git push origin main
+
+      - name: Run ls # 
+        run: |
+          pwd
+          ls /
+
+      - name: Dropbox Uploader
+        uses: whalemare/action-dropbox@v1.0.0
+        with: 
+          accessToken: ${{ secrets.DROPBOX_TOKEN }}
+          file: "/log.txt"
+          destination: 'upload'
+
