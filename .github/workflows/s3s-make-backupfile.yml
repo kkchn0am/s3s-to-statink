@@ -82,7 +82,12 @@ jobs:
         run: |
           pwd
           ls ${{ github.workspace }}/
-
+          
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: npm
+          
       - name: Dropbox Uploader
         uses: whalemare/action-dropbox@v1.0.0
         with: 
