@@ -53,7 +53,15 @@ jobs:
         run: |
           pwd
           ls s3s/exports/coop_results
-
+          
+      # 成果物アップロード
+      - name: artifact upload
+        uses: actions/upload-artifact@v2.2.0
+        with:
+          # 保存ファイル名（name.zip）
+          name: coop_results
+          # 保存するファイル
+          path: s3s/exports/coop_results
 #      - name: Checkout # リポジトリからチェックアウト
 #        uses: actions/checkout@v3
 
