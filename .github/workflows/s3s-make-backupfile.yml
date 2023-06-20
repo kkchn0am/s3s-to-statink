@@ -66,7 +66,7 @@ jobs:
         env:
           TZ: 'Asia/Tokyo'
         run: |
-          echo $(date +'%Y-%m-%d %H:%M:%S') > /log.txt
+          echo $(date +'%Y-%m-%d %H:%M:%S') > ${{ github.workspace }}/log.txt
 
 #      - name: Commit and Push # ログファイルをプッシュしてリポジトリに反映
 #        run: |
@@ -81,12 +81,12 @@ jobs:
       - name: Run ls # 
         run: |
           pwd
-          ls /
+          ls ${{ github.workspace }}/
 
       - name: Dropbox Uploader
         uses: whalemare/action-dropbox@v1.0.0
         with: 
           accessToken: ${{ secrets.DROPBOX_TOKEN }}
-          file: "/log.txt"
+          file: "${{ github.workspace }}/log.txt"
           destination: 'upload'
 
