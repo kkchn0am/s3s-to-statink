@@ -82,12 +82,23 @@ jobs:
         run: |
           pwd
           ls ${{ github.workspace }}/
-          
-      - uses: actions/setup-node@v3
+
+      - name: Checkout whalemare/action-dropbox
+        uses: actions/checkout@v3
         with:
-          node-version: 14
+          repository: 'whalemare/action-dropbox'
+          path: action-dropbox
+          
+      - name: setup-node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
           cache: npm
-      - run: npm install
+          cache-dependency-path: action-dropbox/yarn.lock
+          
+      - name: npm install
+        working-directory: action-dropbox
+        run: npm install
           
       - name: Dropbox Uploader
         uses: whalemare/action-dropbox@v1.0.0
