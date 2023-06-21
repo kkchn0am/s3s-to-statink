@@ -111,3 +111,4 @@ jobs:
         run: bash ./deploy.sh
         env:
           DROPBOX_TOKEN: ${{ secrets.dropbox_token }}
+          UPLOAD_FILE: log.txt
