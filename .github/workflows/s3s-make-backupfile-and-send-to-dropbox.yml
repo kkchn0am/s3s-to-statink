@@ -135,7 +135,7 @@ jobs:
               --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
               --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/coop_results/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
               --header "Content-Type: application/octet-stream" \
-              --data-binary @${{ github.workspace }}/$FILE_NAME
+              --data-binary @./$FILE_NAME
           done
 
       # bash ./deploy.sh coop_results $FILE_NAME
