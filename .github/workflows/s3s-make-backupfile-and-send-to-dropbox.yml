@@ -109,7 +109,13 @@ jobs:
 #          file: "${{ github.workspace }}/log.txt"
 #          destination: 'upload'
 
-      - name: loop
+      - name: mask
+        run: |
+          for FILE_NAME in `ls -1 ${{ github.workspace }}/*.txt`; do
+            echo "::add-mask::$FILE_NAME"
+          done
+
+      - name: upload to dropbox
         run: |
          for FILE_NAME in `ls -1 ${{ github.workspace }}/*.txt`; do
            bash ./deploy.sh coop_results $FILE_NAME
