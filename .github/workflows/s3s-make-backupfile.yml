@@ -78,37 +78,36 @@ jobs:
 #          git pull
 #          git push origin main
 
-      - name: Run ls # 
-        run: |
-          pwd
-          ls ${{ github.workspace }}/
+#      - name: Run ls # 
+#        run: |
+#          pwd
+#          ls ${{ github.workspace }}/
 
-      - name: Checkout whalemare/action-dropbox
-        uses: actions/checkout@v3
-        with:
-          repository: 'whalemare/action-dropbox'
-          path: action-dropbox
+#      - name: Checkout whalemare/action-dropbox
+#        uses: actions/checkout@v3
+#        with:
+#          repository: 'whalemare/action-dropbox'
+#          path: action-dropbox
           
-      - name: setup-node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: npm
-          cache-dependency-path: action-dropbox/yarn.lock
+#      - name: setup-node
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version: 16
+#          cache: npm
+#          cache-dependency-path: action-dropbox/yarn.lock
           
-      - name: npm install
-        working-directory: action-dropbox
-        run: npm i fs-promise --legacy-peer-deps
-        
-      - name: cd
-        run: |
-          cd ${{ github.action_path }}
-          ls ${{ github.action_path }}
+#      - name: npm install
+#        working-directory: action-dropbox
+#        run: npm i fs-promise --legacy-peer-deps
 
-      - name: Dropbox Uploader
-        uses: whalemare/action-dropbox@v1.0.0
-        with: 
-          accessToken: ${{ secrets.DROPBOX_TOKEN }}
-          file: "${{ github.workspace }}/log.txt"
-          destination: 'upload'
+#      - name: Dropbox Uploader
+#        uses: whalemare/action-dropbox@v1.0.0
+#        with: 
+#          accessToken: ${{ secrets.DROPBOX_TOKEN }}
+#          file: "${{ github.workspace }}/log.txt"
+#          destination: 'upload'
 
+      - name: upload to dropbox
+        run: bash ./deploy.sh
+        env:
+          DROPBOX_TOKEN: ${{ secrets.dropbox_token }}
