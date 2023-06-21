@@ -80,13 +80,6 @@ jobs:
 #          git pull
 #          git push origin main
 
-      - name: Run ls # 
-        run: |
-          pwd
-          ls -1 ${{ github.workspace }}/*.txt | sed s@${{ github.workspace }}/@@g
-          ls -1F ${{ github.workspace }}/*.txt
-          ls -1F ${{ github.workspace }}/*.txt | sed s@${{ github.workspace }}/@@g
-
       - id: get-token
         name: get dropbox token
         run: |
@@ -99,11 +92,11 @@ jobs:
                 | jq -r ".access_token")
           echo "token=$secret_handle" >> "$GITHUB_OUTPUT"
            
-#      - name: filename masking
-#        run: |
-#          for FILE_NAME in `ls -1 ${{ github.workspace }}/*.txt`; do
-#            echo "::add-mask::$FILE_NAME"
-#          done
+      - name: filename masking
+        run: |
+          for FILE_NAME in `ls -1 ${{ github.workspace }}/*.txt | sed s@${{ github.workspace }}/@@g`; do
+            echo "::add-mask::$FILE_NAME"
+          done
 
       - name: upload to dropbox
         run: |
@@ -116,10 +109,3 @@ jobs:
               --header "Content-Type: application/octet-stream" \
               --data-binary @${{ github.workspace }}/$FILE_NAME
           done
-
-      # bash ./deploy.sh coop_results $FILE_NAME
-      #- name: upload to dropbox
-      #  run: bash ./deploy.sh
-      #  env:
-      #    DROPBOX_TOKEN: ${{ secrets.dropbox_token }}
-      #    UPLOAD_FILE: 'log.txt'
