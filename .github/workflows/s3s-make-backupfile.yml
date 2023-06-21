@@ -111,7 +111,7 @@ jobs:
 
       - name: loop
         run: |
-         for FILE_NAME in log.txt log2.txt log3.txt; do
+         for FILE_NAME in `ls -1 ${{ github.workspace }}/*.txt`; do
            bash ./deploy.sh coop_results $FILE_NAME
          done
         env:
