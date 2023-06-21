@@ -67,6 +67,8 @@ jobs:
           TZ: 'Asia/Tokyo'
         run: |
           echo $(date +'%Y-%m-%d %H:%M:%S') > ${{ github.workspace }}/log.txt
+          echo $(date +'%Y-%m-%d %H:%M:%S') > ${{ github.workspace }}/log2.txt
+          echo $(date +'%Y-%m-%d %H:%M:%S') > ${{ github.workspace }}/log3.txt
 
 #      - name: Commit and Push # ログファイルをプッシュしてリポジトリに反映
 #        run: |
@@ -107,8 +109,16 @@ jobs:
 #          file: "${{ github.workspace }}/log.txt"
 #          destination: 'upload'
 
-      - name: upload to dropbox
-        run: bash ./deploy.sh
+      - name: loop
+        run: |
+         for FILE_NAME in log.txt log2.txt log3.txt; do
+           bash ./deploy.sh $FILE_NAME
+         done
         env:
           DROPBOX_TOKEN: ${{ secrets.dropbox_token }}
-          UPLOAD_FILE: 'log.txt'
+          
+      #- name: upload to dropbox
+      #  run: bash ./deploy.sh
+      #  env:
+      #    DROPBOX_TOKEN: ${{ secrets.dropbox_token }}
+      #    UPLOAD_FILE: 'log.txt'
