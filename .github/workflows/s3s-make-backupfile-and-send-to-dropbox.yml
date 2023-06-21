@@ -83,7 +83,7 @@ jobs:
       - name: Run ls # 
         run: |
           pwd
-          ls ${{ github.workspace }}/
+          ls -1 /home/runner/work/s3s-to-statink/s3s-to-statink/*.txt
 
       - id: get-token
         name: get dropbox token
@@ -107,6 +107,7 @@ jobs:
         run: |
           set -eux
           for FILE_NAME in `ls -1 ${{ github.workspace }}/*.txt`; do
+            echo $FILE_NAME
             curl -X POST https://content.dropboxapi.com/2/files/upload \
               --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
               --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/coop_results/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
