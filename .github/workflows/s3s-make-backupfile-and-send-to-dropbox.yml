@@ -85,7 +85,7 @@ jobs:
           pwd
           ls -1 ${{ github.workspace }}/*.txt
           ls -1F ${{ github.workspace }}/*.txt
-          ls -1F ${{ github.workspace }}/*.txt | sed s/b/★/g
+          ls -1F ${{ github.workspace }}/*.txt | sed s/${{ github.workspace }}\///g
 
       - id: get-token
         name: get dropbox token
