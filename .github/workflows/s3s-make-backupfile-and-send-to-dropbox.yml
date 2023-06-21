@@ -83,7 +83,7 @@ jobs:
       - name: Run ls # 
         run: |
           pwd
-          ls -1 ${{ github.workspace }}/*.txt
+          ls -1 ${{ github.workspace }}/*.txt | sed s@${{ github.workspace }}/@@g
           ls -1F ${{ github.workspace }}/*.txt
           ls -1F ${{ github.workspace }}/*.txt | sed s@${{ github.workspace }}/@@g
 
@@ -108,13 +108,13 @@ jobs:
       - name: upload to dropbox
         run: |
           set -eux
-          for FILE_NAME in `ls -1 ${{ github.workspace }}/*.txt`; do
+          for FILE_NAME in `ls -1 ${{ github.workspace }}/*.txt | sed s@${{ github.workspace }}/@@g`; do
             echo $FILE_NAME
             curl -X POST https://content.dropboxapi.com/2/files/upload \
               --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
               --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/coop_results/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
               --header "Content-Type: application/octet-stream" \
-              --data-binary @$FILE_NAME
+              --data-binary @${{ github.workspace }}/$FILE_NAME
           done
 
       # bash ./deploy.sh coop_results $FILE_NAME
