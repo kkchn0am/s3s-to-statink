@@ -131,7 +131,7 @@ jobs:
             bash ./deploy.sh coop_results $FILE_NAME
           done
         env:
-          DROPBOX_TOKEN: $token
+          DROPBOX_TOKEN: ${token}
           
       #- name: upload to dropbox
       #  run: bash ./deploy.sh
