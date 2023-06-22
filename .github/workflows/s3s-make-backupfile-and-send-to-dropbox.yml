@@ -49,17 +49,20 @@ jobs:
         run: |
           python3 s3s.py -o
           
-      - name: filename masking
+      - name: Mask filename 
         working-directory: s3s
         run: |
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
-            sed s@${{ github.workspace }}/s3s/exports/coop_results//@@g`; do
+          sed s@${{ github.workspace }}/s3s/exports/coop_results//@@g`; do
             echo "::add-mask::$FILE_NAME"
-            echo $FILE_NAME
+          done
+          for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/results/*.json | \
+            sed s@${{ github.workspace }}/s3s/exports/results//@@g`; do
+            echo "::add-mask::$FILE_NAME"
           done
 
       - id: get-token
-        name: get dropbox token
+        name: Get dropbox token
         run: |
           secret_handle=$((RANDOM))
           echo "::add-mask::$secret_handle"
@@ -70,17 +73,17 @@ jobs:
                 | jq -r ".access_token")
           echo "token=$secret_handle" >> "$GITHUB_OUTPUT"
            
-#      - name: upload to dropbox
-#        run: |
-#          set -eux
-#          for FILE_NAME in `ls -1 ${{ github.workspace }}/*.txt | sed s@${{ github.workspace }}/@@g`; do
-#            echo $FILE_NAME
-#            curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
-#              --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
-#              --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/coop_results/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
-#              --header "Content-Type: application/json" \
-#              --data @${{ github.workspace }}/$FILE_NAME
-#          done
+      - name: Upload to dropbox
+        run: |
+          set -eux
+          for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
+          sed s@${{ github.workspace }}/s3s/exports/coop_results//@@g`; do
+            curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
+              --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
+              --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/coop_results/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
+              --header "Content-Type: application/json" \
+              --data @${{ github.workspace }}/$FILE_NAME
+          done
 
       # 成果物アップロード
       #- name: artifact upload
