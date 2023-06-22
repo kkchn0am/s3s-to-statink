@@ -48,7 +48,7 @@ jobs:
         working-directory: s3s
         run: |
           python3 s3s.py -o
-          ls -R
+          ls ${{ github.workspace }}/exports/coop_results/*.json
 
       # 成果物アップロード
       #- name: artifact upload
@@ -92,11 +92,12 @@ jobs:
                 | jq -r ".access_token")
           echo "token=$secret_handle" >> "$GITHUB_OUTPUT"
            
-#      - name: filename masking
-#        run: |
-#          for FILE_NAME in `ls -1 ${{ github.workspace }}/*.txt | sed s@${{ github.workspace }}/@@g`; do
-#            echo "::add-mask::$FILE_NAME"
-#          done
+      - name: filename masking
+        run: |
+          for FILE_NAME in `ls -1 ${{ github.workspace }}/exports/coop_results/*.json | \
+            sed s@${{ github.workspace }}/exports/coop_results//@@g`; do
+            echo "::add-mask::$FILE_NAME"
+          done
 
 #      - name: upload to dropbox
 #        run: |
