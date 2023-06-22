@@ -74,8 +74,7 @@ jobs:
            
       # バトルのリザルトをDropboxへ送信
       - name: Upload battle-result to dropbox
-        run: |
-          set -eux          
+        run: |         
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/results/*.json | \
            sed s@${{ github.workspace }}/s3s/exports/results/@@g`; do
             curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
