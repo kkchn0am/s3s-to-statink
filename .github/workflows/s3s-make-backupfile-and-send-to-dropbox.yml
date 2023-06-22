@@ -53,7 +53,7 @@ jobs:
         working-directory: s3s
         run: |
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
-          sed s@${{ github.workspace }}/s3s/exports/coop_results//@@g`; do
+           sed s@${{ github.workspace }}/s3s/exports/coop_results//@@g`; do
             echo "::add-mask::$FILE_NAME"
           done
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/results/*.json | \
@@ -77,12 +77,12 @@ jobs:
         run: |
           set -eux
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
-          sed s@${{ github.workspace }}/s3s/exports/coop_results//@@g`; do
-            curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
+           sed s@${{ github.workspace }}/s3s/exports/coop_results//@@g`; do
+            curl -X POST https://content.dropboxapi.com/2/files/upload \
               --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
               --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/coop_results/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
               --header "Content-Type: application/json" \
-              --data @${{ github.workspace }}/$FILE_NAME
+              --data @${{ github.workspace }}/s3s/exports/coop_results/$FILE_NAME
           done
 
       # 成果物アップロード
