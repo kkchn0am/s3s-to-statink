@@ -1,8 +1,8 @@
 name: Splatoon3 Splatnet3 Backup
 
 on:
-#  schedule:
-#    - cron: '0 0-23/2 * * *'
+  schedule:
+    - cron: '0 5,9,15,21 * * *'
   workflow_dispatch:
 
 jobs:
@@ -17,9 +17,6 @@ jobs:
       F_GEN: ${{ secrets.F_GEN }}
 
     name: Splatoon3 Splatnet3 Backup
-
-    permissions:  # ログファイル修正のため権限を設定
-        contents: write
 
     steps:
       - name: Set up Python 3.11 # Pythonのセットアップ
@@ -44,11 +41,12 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Run s3s # s3sの実行
+      - name: Run s3s # s3sを実行しバックアップファイルを取得
         working-directory: s3s
         run: |
           python3 s3s.py -o
           
+      # バックアップファイル名のマスク
       - name: Mask filename 
         working-directory: s3s
         run: |
@@ -61,6 +59,7 @@ jobs:
             echo "::add-mask::$FILE_NAME"
           done
 
+      # Dropboxのアクセストークンを取得
       - id: get-token
         name: Get dropbox token
         run: |
@@ -73,46 +72,27 @@ jobs:
                 | jq -r ".access_token")
           echo "token=$secret_handle" >> "$GITHUB_OUTPUT"
            
-      - name: Upload to dropbox
+      # バトルのリザルトをDropboxへ送信
+      - name: Upload battle-result to dropbox
         run: |
-          set -eux
+          set -eux          
+          for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/results/*.json | \
+           sed s@${{ github.workspace }}/s3s/exports/coop_results/@@g`; do
+            curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
+              --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
+              --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/results/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
+              --header "Content-Type: application/octet-stream" \
+              --data @${{ github.workspace }}/s3s/exports/results/$FILE_NAME
+          done
+      
+      # バイトのリザルトをDropboxへ送信
+      - name: Upload coop-result to dropbox
+        run: |
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
            sed s@${{ github.workspace }}/s3s/exports/coop_results/@@g`; do
-            curl -X POST https://content.dropboxapi.com/2/files/upload \
+            curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
               --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
               --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/coop_results/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
               --header "Content-Type: application/octet-stream" \
               --data @${{ github.workspace }}/s3s/exports/coop_results/$FILE_NAME
           done
-
-      # 成果物アップロード
-      #- name: artifact upload
-      #  uses: actions/upload-artifact@v2.2.0
-      #  with:
-      #    # 保存ファイル名（name.zip）
-      #    name: coop_results
-      #    # 保存するファイル
-      #    path: s3s/exports/coop_results
-      
-      #- name: Checkout # リポジトリからチェックアウト
-      #  uses: actions/checkout@v3
-
-      #- name: Update LogFile # ログファイルに日付時刻を出力
-      #  env:
-      #    TZ: 'Asia/Tokyo'
-      #  run: |
-      #    echo $(date +'%Y-%m-%d %H:%M:%S') > ${{ github.workspace }}/log.txt
-      #    echo $(date +'%Y-%m-%d %H:%M:%S') > ${{ github.workspace }}/log2.txt
-      #    echo $(date +'%Y-%m-%d %H:%M:%S') > ${{ github.workspace }}/log3.txt
-
-#      - name: Commit and Push # ログファイルをプッシュしてリポジトリに反映
-#        run: |
-#          git config --global user.email "ruzoho606@sofia.re"
-#          git config --global user.name "kkchn0am"
-#          git add .
-#          git commit -m "Update product information"
-#          git config pull.rebase false
-#          git pull
-#          git push origin main
-
-
