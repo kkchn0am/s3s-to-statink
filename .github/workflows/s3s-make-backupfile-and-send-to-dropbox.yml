@@ -52,6 +52,9 @@ jobs:
       - name: Mask filename 
         working-directory: s3s
         run: |
+          ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
+           sed s@${{ github.workspace }}/s3s/exports/coop_results//@@g
+           
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
            sed s@${{ github.workspace }}/s3s/exports/coop_results//@@g`; do
             echo "::add-mask::$FILE_NAME"
