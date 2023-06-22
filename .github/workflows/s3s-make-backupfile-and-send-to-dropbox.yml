@@ -48,9 +48,6 @@ jobs:
         working-directory: s3s
         run: |
           python3 s3s.py -o
-          pwd
-          echo ${{ github.workspace }}
-          ls -R
 
       # 成果物アップロード
       #- name: artifact upload
@@ -96,8 +93,8 @@ jobs:
            
       - name: filename masking
         run: |
-          for FILE_NAME in `ls -1 ${{ github.workspace }}/exports/coop_results/*.json | \
-            sed s@${{ github.workspace }}/exports/coop_results//@@g`; do
+          for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
+            sed s@${{ github.workspace }}/s3s/exports/coop_results//@@g`; do
             echo "::add-mask::$FILE_NAME"
           done
 
