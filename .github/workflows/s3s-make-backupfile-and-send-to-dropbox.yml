@@ -93,6 +93,7 @@ jobs:
            
       - name: filename masking
         run: |
+          ls -R
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
             sed s@${{ github.workspace }}/s3s/exports/coop_results//@@g`; do
             echo "::add-mask::$FILE_NAME"
