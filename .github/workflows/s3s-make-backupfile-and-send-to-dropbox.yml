@@ -27,28 +27,28 @@ jobs:
         with:
           python-version: 3.11
 
-      #- name: Checkout frozenpandaman/s3s # s3sをチェックアウト
-      #  uses: actions/checkout@v3
-      #  with:
-      #    repository: 'frozenpandaman/s3s'
-      #    path: s3s
+      - name: Checkout frozenpandaman/s3s # s3sをチェックアウト
+        uses: actions/checkout@v3
+        with:
+          repository: 'frozenpandaman/s3s'
+          path: s3s
 
-      #- name: Generate config.txt # config.txtの作成
-      #  working-directory: s3s
-      #  run: |
-      #    echo '{"api_key": "${{ env.API_KEY }}", "acc_loc": "${{ env.ACC_LOC }}", "gtoken": "${{ env.GTOKEN }}", "bullettoken": "${{ env.BULLETTOKEN }}", "session_token": "${{ env.SESSION_TOKEN }}", "f_gen": "${{ env.F_GEN }}" }' > config.txt
-      #    cat config.txt
+      - name: Generate config.txt # config.txtの作成
+        working-directory: s3s
+        run: |
+          echo '{"api_key": "${{ env.API_KEY }}", "acc_loc": "${{ env.ACC_LOC }}", "gtoken": "${{ env.GTOKEN }}", "bullettoken": "${{ env.BULLETTOKEN }}", "session_token": "${{ env.SESSION_TOKEN }}", "f_gen": "${{ env.F_GEN }}" }' > config.txt
+          cat config.txt
 
-      #- name: Install s3s requirements # s3sのパッケージリストを取得
-      #  working-directory: s3s
-      #  run: |
-      #    pip install -r requirements.txt
+      - name: Install s3s requirements # s3sのパッケージリストを取得
+        working-directory: s3s
+        run: |
+          pip install -r requirements.txt
 
-      #- name: Run s3s # s3sの実行
-      #  working-directory: s3s
-      #  run: |
-      #    python3 s3s.py -o
-
+      - name: Run s3s # s3sの実行
+        working-directory: s3s
+        run: |
+          python3 s3s.py -o
+          ls s3s
 
       # 成果物アップロード
       #- name: artifact upload
@@ -62,13 +62,13 @@ jobs:
       - name: Checkout # リポジトリからチェックアウト
         uses: actions/checkout@v3
 
-      - name: Update LogFile # ログファイルに日付時刻を出力
-        env:
-          TZ: 'Asia/Tokyo'
-        run: |
-          echo $(date +'%Y-%m-%d %H:%M:%S') > ${{ github.workspace }}/log.txt
-          echo $(date +'%Y-%m-%d %H:%M:%S') > ${{ github.workspace }}/log2.txt
-          echo $(date +'%Y-%m-%d %H:%M:%S') > ${{ github.workspace }}/log3.txt
+      #- name: Update LogFile # ログファイルに日付時刻を出力
+      #  env:
+      #    TZ: 'Asia/Tokyo'
+      #  run: |
+      #    echo $(date +'%Y-%m-%d %H:%M:%S') > ${{ github.workspace }}/log.txt
+      #    echo $(date +'%Y-%m-%d %H:%M:%S') > ${{ github.workspace }}/log2.txt
+      #    echo $(date +'%Y-%m-%d %H:%M:%S') > ${{ github.workspace }}/log3.txt
 
 #      - name: Commit and Push # ログファイルをプッシュしてリポジトリに反映
 #        run: |
@@ -98,14 +98,14 @@ jobs:
             echo "::add-mask::$FILE_NAME"
           done
 
-      - name: upload to dropbox
-        run: |
-          set -eux
-          for FILE_NAME in `ls -1 ${{ github.workspace }}/*.txt | sed s@${{ github.workspace }}/@@g`; do
-            echo $FILE_NAME
-            curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
-              --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
-              --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/coop_results/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
-              --header "Content-Type: application/json" \
-              --data @${{ github.workspace }}/$FILE_NAME
-          done
+#      - name: upload to dropbox
+#        run: |
+#          set -eux
+#          for FILE_NAME in `ls -1 ${{ github.workspace }}/*.txt | sed s@${{ github.workspace }}/@@g`; do
+#            echo $FILE_NAME
+#            curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
+#              --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
+#              --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/coop_results/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
+#              --header "Content-Type: application/json" \
+#              --data @${{ github.workspace }}/$FILE_NAME
+#          done
