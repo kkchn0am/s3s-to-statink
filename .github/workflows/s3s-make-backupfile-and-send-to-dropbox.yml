@@ -88,6 +88,7 @@ jobs:
       - name: Upload coop-result to dropbox
         run: |
           flg=$(echo false)
+          echo $flg
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
           sed s@${{ github.workspace }}/s3s/exports/coop_results/@@g`; do
             if [ $flg == '1' ] ; then
