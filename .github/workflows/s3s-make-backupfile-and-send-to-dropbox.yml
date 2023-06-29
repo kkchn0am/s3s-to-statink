@@ -97,6 +97,6 @@ jobs:
                 --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/coop_results/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
                 --header "Content-Type: application/octet-stream" \
                 --data @${{ github.workspace }}/s3s/exports/coop_results/$FILE_NAME
-              flg=$(echo true)
             fi
+            flg=$(echo true)
           done
