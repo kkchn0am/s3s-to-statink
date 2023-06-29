@@ -90,7 +90,6 @@ jobs:
           flg=$(echo false)
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
           sed s@${{ github.workspace }}/s3s/exports/coop_results/@@g`; do
-            echo $flg
             if [ $flg == true ] ; then
               curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
                 --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
