@@ -88,10 +88,10 @@ jobs:
       - name: Upload coop-result to dropbox
         run: |
           flg=$(echo false)
-          echo $flg
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
           sed s@${{ github.workspace }}/s3s/exports/coop_results/@@g`; do
-            if [ $flg == '1' ] ; then
+            echo $flg
+            if [ $flg == true ] ; then
               curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
                 --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
                 --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/coop_results/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
