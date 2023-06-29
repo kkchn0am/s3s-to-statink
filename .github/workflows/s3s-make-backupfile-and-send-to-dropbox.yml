@@ -87,15 +87,15 @@ jobs:
       # バイトのリザルトをDropboxへ送信
       - name: Upload coop-result to dropbox
         run: |
-          i=0
+          flg=$(echo false)
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
           sed s@${{ github.workspace }}/s3s/exports/coop_results/@@g`; do
-            if [i <> 0] ; then
+            if ['1' == $flg] ; then
               curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
                 --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
                 --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/coop_results/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
                 --header "Content-Type: application/octet-stream" \
                 --data @${{ github.workspace }}/s3s/exports/coop_results/$FILE_NAME
-              i=$(i+1)
+              flg=$(echo true)
             fi
           done
