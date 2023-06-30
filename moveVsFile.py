@@ -26,8 +26,8 @@ for filename in filelist:
         elif data["data"]["vsHistoryDetail"]["vsMode"]["mode"] == "XMATCH":
             shutil.move(folder_path + '/' + filename, folder_path + '/vs_xmatch')
         elif data["data"]["vsHistoryDetail"]["vsMode"]["mode"] == "LEAGUE":
-             shutil.move(folder_path + '/' + filename, folder_path + '/vs_event')
+            shutil.move(folder_path + '/' + filename, folder_path + '/vs_event')
         elif data["data"]["vsHistoryDetail"]["vsMode"]["mode"] == "PRIVATE":
-             shutil.move(folder_path + '/' + filename, folder_path + '/vs_private')
+            shutil.move(folder_path + '/' + filename, folder_path + '/vs_private')
         else:
-             shutil.move(folder_path + '/' + filename, folder_path + '/vs_regular')
+            shutil.move(folder_path + '/' + filename, folder_path + '/vs_regular')
