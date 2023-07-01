@@ -85,8 +85,8 @@ jobs:
       - name: Upload battle-result to dropbox
         run: |
           flg=$(echo false)
-          ls -F | grep -v / | wc -l
-          if [ `ls -F | grep -v / | wc -l` < 50 ] ; then
+          ls -F ${{ github.workspace }}/s3s/exports/results/vs_regular | grep -v / | wc -l
+          if [ `ls -F ${{ github.workspace }}/s3s/exports/results/vs_regular | grep -v / | wc -l` < 50 ] ; then
             flg=$(echo true)
           fi
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/results/vs_regular/*.json | \
@@ -101,6 +101,7 @@ jobs:
               flg=$(echo true)
           done
           
+          ls -F ${{ github.workspace }}/s3s/exports/results/vs_bankara | grep -v / | wc -l
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/results/vs_bankara/*.json | \
           sed s@${{ github.workspace }}/s3s/exports/results/vs_bankara/@@g`; do
             curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
@@ -109,6 +110,7 @@ jobs:
               --header "Content-Type: application/octet-stream" \
               --data @${{ github.workspace }}/s3s/exports/results/vs_bankara/$FILE_NAME
           done
+          ls -F ${{ github.workspace }}/s3s/exports/results/vs_xmatch | grep -v / | wc -l
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/results/vs_xmatch/*.json | \
           sed s@${{ github.workspace }}/s3s/exports/results/vs_xmatch/@@g`; do
             curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
@@ -117,6 +119,7 @@ jobs:
               --header "Content-Type: application/octet-stream" \
               --data @${{ github.workspace }}/s3s/exports/results/vs_xmatch/$FILE_NAME
           done
+          ls -F ${{ github.workspace }}/s3s/exports/results/vs_event/ | grep -v / | wc -l
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/results/vs_event/*.json | \
           sed s@${{ github.workspace }}/s3s/exports/results/vs_event/@@g`; do
             curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
@@ -125,6 +128,7 @@ jobs:
               --header "Content-Type: application/octet-stream" \
               --data @${{ github.workspace }}/s3s/exports/results/vs_event/$FILE_NAME
           done
+          ls -F ${{ github.workspace }}/s3s/exports/results/vs_private | grep -v / | wc -l
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/results/vs_private/*.json | \
           sed s@${{ github.workspace }}/s3s/exports/results/vs_private/@@g`; do
             curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
