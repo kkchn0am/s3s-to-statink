@@ -23,6 +23,10 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.11
+          
+      # リポジトリからチェックアウト
+      - name: Checkout 
+        uses: actions/checkout@v3
 
       - name: Checkout frozenpandaman/s3s # s3sをチェックアウト
         uses: actions/checkout@v3
@@ -45,10 +49,6 @@ jobs:
         working-directory: s3s
         run: |
           python3 s3s.py -o
-          
-      # リポジトリからチェックアウト
-      - name: Checkout 
-        uses: actions/checkout@v3
         
       - name: ls
         run: |
