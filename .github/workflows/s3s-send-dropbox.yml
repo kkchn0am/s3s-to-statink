@@ -46,8 +46,17 @@ jobs:
         run: |
           python3 s3s.py -o
           
+      # リポジトリからチェックアウト
+      - name: Checkout 
+        uses: actions/checkout@v3
+        
+      - name: ls
+         run: |
+           ls -lR
+           ls -lR ${{ github.workspace }}
+        
       # バックアップファイル名のマスク
-      - name: Mask filename 
+      - name: Mask filename
         working-directory: s3s
         run: |
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/results/*.json | \
