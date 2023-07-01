@@ -50,23 +50,28 @@ jobs:
         run: |
           python3 s3s.py -o
         
-      - name: ls
-        run: |
-           ls -lR
-           ls -lR ${{ github.workspace }}
-        
       # バックアップファイル名のマスク
       - name: Mask filename
         working-directory: s3s
         run: |
-          for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/results/*.json | \
-          sed s@${{ github.workspace }}/s3s/exports/results/@@g`; do
-            echo "::add-mask::$FILE_NAME"
-          done
-          for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
-           sed s@${{ github.workspace }}/s3s/exports/coop_results/@@g`; do
-            echo "::add-mask::$FILE_NAME"
-          done
+      #    for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/results/*.json | \
+      #    sed s@${{ github.workspace }}/s3s/exports/results/@@g`; do
+      #      echo "::add-mask::$FILE_NAME"
+      #    done
+      #    for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
+      #     sed s@${{ github.workspace }}/s3s/exports/coop_results/@@g`; do
+      #      echo "::add-mask::$FILE_NAME"
+      #    done
+           
+      # バトルのリザルトをフォルダ分けする
+      - name: Move VSFile
+        working-directory: s3s
+        run: |
+          python3 moveVsFile.py ${{ github.workspace }}/s3s/exports/results
+
+      - name: ls
+        run: |
+           ls -lR
 
       # Dropboxのアクセストークンを取得
       - id: get-token
