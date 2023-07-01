@@ -65,7 +65,6 @@ jobs:
            
       # バトルのリザルトをフォルダ分けする
       - name: Move VSFile
-        working-directory: s3s
         run: |
           python3 moveVsFile.py ${{ github.workspace }}/s3s/exports/results
 
