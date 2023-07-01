@@ -83,15 +83,24 @@ jobs:
            
       # バトルのリザルトをDropboxへ送信
       - name: Upload battle-result to dropbox
-        run: |         
+        run: |
+          flg=$(echo false)
+          ls -F | grep -v / | wc -l
+          if [ `ls -F | grep -v / | wc -l` < 50 ] ; then
+            flg=$(echo true)
+          fi
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/results/vs_regular/*.json | \
           sed s@${{ github.workspace }}/s3s/exports/results/vs_regular/@@g`; do
-            curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
-              --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
-              --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/results/vs_regular/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
-              --header "Content-Type: application/octet-stream" \
-              --data @${{ github.workspace }}/s3s/exports/results/vs_regular/$FILE_NAME
+              if [ $flg == true ] ; then
+                curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
+                --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
+                --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/results/vs_regular/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
+                --header "Content-Type: application/octet-stream" \
+                --data @${{ github.workspace }}/s3s/exports/results/vs_regular/$FILE_NAME
+              fi
+              flg=$(echo true)
           done
+          
           for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/results/vs_bankara/*.json | \
           sed s@${{ github.workspace }}/s3s/exports/results/vs_bankara/@@g`; do
             curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
