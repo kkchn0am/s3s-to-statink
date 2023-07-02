@@ -88,7 +88,6 @@ jobs:
               
               if [ -d ${{ github.workspace }}/s3s/exports/results/$VSMODE ]; then
                   echo $VSMODE
-                  echo 'ls -F ${{ github.workspace }}/s3s/exports/results/$VSMODE | grep -v / | wc -l`
                   ls -F ${{ github.workspace }}/s3s/exports/results/$VSMODE | grep -v / | wc -l
                   flg=$(echo false)
                   if [ `ls -F ${{ github.workspace }}/s3s/exports/results/$VSMODE | grep -v / | wc -l` < 50 ] ; then
