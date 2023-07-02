@@ -85,13 +85,10 @@ jobs:
       - name: Upload battle-result to dropbox
         run: |
           for VSMODE in vs_regular vs_bankara vs_xmatch vs_event vs_private; do
-              
-              if [ -d ${{ github.workspace }}/s3s/exports/results/$VSMODE ]; then
+              if [ -n "$(ls ${{ github.workspace }}/s3s/exports/results/$VSMODE)" ]; then
                   echo $VSMODE
-                  ls -F ${{ github.workspace }}/s3s/exports/results/$VSMODE | grep -v / | wc -l
                   flg=$(echo false)
                   if [ `ls -F ${{ github.workspace }}/s3s/exports/results/$VSMODE | grep -v / | wc -l` -lt 50 ] ; then
-                      echo under50
                       flg=$(echo true)
                   fi
                   for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/results/$VSMODE/*.json | \
