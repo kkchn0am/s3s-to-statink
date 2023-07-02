@@ -85,8 +85,8 @@ jobs:
       - name: Upload battle-result to dropbox
         run: |
           for VSMODE in vs_regular vs_bankara vs_xmatch vs_event vs_private; do
+              echo $VSMODE
               if [ -n "$(ls ${{ github.workspace }}/s3s/exports/results/$VSMODE)" ]; then
-                  echo $VSMODE
                   flg=$(echo false)
                   if [ `ls -F ${{ github.workspace }}/s3s/exports/results/$VSMODE | grep -v / | wc -l` -lt 50 ] ; then
                       flg=$(echo true)
@@ -108,18 +108,20 @@ jobs:
       # バイトのリザルトをDropboxへ送信
       - name: Upload coop-result to dropbox
         run: |
-          flg=$(echo false)
-          if [ `ls -F ${{ github.workspace }}/s3s/exports/results/$VSMODE | grep -v / | wc -l` < 50 ] ; then
-              flg=$(echo true)
-          fi
-          for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
-            sed s@${{ github.workspace }}/s3s/exports/coop_results/@@g`; do
-              if [ $flg == true ] ; then
-                  curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
-                    --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
-                    --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/coop_results/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
-                    --header "Content-Type: application/octet-stream" \
-                    --data @${{ github.workspace }}/s3s/exports/coop_results/$FILE_NAME
+          if [ -n "$(ls ${{ github.workspace }}/s3s/exports/coop_results)" ]; then
+              flg=$(echo false)
+              if [ `ls -F ${{ github.workspace }}/s3s/exports/coop_results | grep -v / | wc -l` -lt 50 ] ; then
+                  flg=$(echo true)
               fi
-              flg=$(echo true)
-          done
+              for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/coop_results/*.json | \
+                sed s@${{ github.workspace }}/s3s/exports/coop_results/@@g`; do
+                  if [ $flg == true ] ; then
+                      curl -o /dev/null -s -X POST https://content.dropboxapi.com/2/files/upload \
+                        --header "Authorization: Bearer ${{ steps.get-token.outputs.token }}" \
+                        --header "Dropbox-API-Arg: {\"path\": \"/Splatoon3/coop_results/$FILE_NAME\",\"mode\": \"overwrite\",\"mute\": false}" \
+                        --header "Content-Type: application/octet-stream" \
+                        --data @${{ github.workspace }}/s3s/exports/coop_results/$FILE_NAME
+                  fi
+                  flg=$(echo true)
+              done
+          fi
