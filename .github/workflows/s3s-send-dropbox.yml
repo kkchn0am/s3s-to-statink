@@ -88,10 +88,11 @@ jobs:
               
               if [ -d ${{ github.workspace }}/s3s/exports/results/$VSMODE ]; then
                   echo $VSMODE
-                  echo 'ls -F ${{ github.workspace }}/s3s/exports/results/$VSMODE | grep -v / | wc -l` < 50'
+                  echo 'ls -F ${{ github.workspace }}/s3s/exports/results/$VSMODE | grep -v / | wc -l`
+                  ls -F ${{ github.workspace }}/s3s/exports/results/$VSMODE | grep -v / | wc -l
                   flg=$(echo false)
                   if [ `ls -F ${{ github.workspace }}/s3s/exports/results/$VSMODE | grep -v / | wc -l` < 50 ] ; then
-                      ls -F ${{ github.workspace }}/s3s/exports/results/$VSMODE | grep -v / | wc -l
+                      echo true
                       flg=$(echo true)
                   fi
                   for FILE_NAME in `ls -1 ${{ github.workspace }}/s3s/exports/results/$VSMODE/*.json | \
