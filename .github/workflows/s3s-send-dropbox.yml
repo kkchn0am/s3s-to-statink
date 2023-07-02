@@ -90,7 +90,7 @@ jobs:
                   echo $VSMODE
                   ls -F ${{ github.workspace }}/s3s/exports/results/$VSMODE | grep -v / | wc -l
                   flg=$(echo false)
-                  if [ `ls -F ${{ github.workspace }}/s3s/exports/results/$VSMODE | grep -v / | wc -l` < "50" ] ; then
+                  if [ `ls -F ${{ github.workspace }}/s3s/exports/results/$VSMODE | grep -v / | wc -l` -lt 50 ] ; then
                       echo under50
                       flg=$(echo true)
                   fi
